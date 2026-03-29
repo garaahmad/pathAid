@@ -624,7 +624,7 @@ class _RequestDetailsState extends State<RequestDetails> {
           toastAlignment: Alignment.topCenter,
           displaySideBar: false,
         ).show(context);
-        Navigator.pop(context, true); // Return true to indicate change
+        Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {

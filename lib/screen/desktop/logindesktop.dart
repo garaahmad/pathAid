@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:motion_toast/motion_toast.dart'; // تأكد من استيراد المكتبة
+import 'package:motion_toast/motion_toast.dart';
 import 'package:path_aid/components.dart';
 
 class Logindesktop extends StatefulWidget {
@@ -10,7 +10,7 @@ class Logindesktop extends StatefulWidget {
 }
 
 class _LogindesktopState extends State<Logindesktop> {
-  // تم تصحيح اسم المتغير ليكون متسقًا
+
   String username = "";
   String password = "";
 
@@ -27,7 +27,7 @@ class _LogindesktopState extends State<Logindesktop> {
         ),
         child: Center(
           child: SingleChildScrollView(
-            // إضافة SingleChildScrollView لمنع تجاوز الشاشة
+
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -45,8 +45,8 @@ class _LogindesktopState extends State<Logindesktop> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(40.0), // زيادة الهوامش الداخلية
-                  width: 500, // تصغير العرض لشكل أفضل
+                  padding: EdgeInsets.all(40.0),
+                  width: 500,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -54,8 +54,8 @@ class _LogindesktopState extends State<Logindesktop> {
                       BoxShadow(
                         color: Colors.black.withOpacity(
                           0.2,
-                        ), // تقليل قتامة الظل
-                        offset: Offset(0, 5), // تعديل اتجاه الظل
+                        ),
+                        offset: Offset(0, 5),
                         blurRadius: 10.0,
                       ),
                     ],
@@ -87,7 +87,7 @@ class _LogindesktopState extends State<Logindesktop> {
                       SizedBox(height: 30),
                       MaterialButton(
                         onPressed: () {
-                          // استخدام المتغير المصحح
+
                           if (username == "Doctor" && password == "Doctor") {
                             Navigator.pushNamed(context, '/doctor');
                           } else if (username == "Driver" &&

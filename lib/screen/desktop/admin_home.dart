@@ -42,10 +42,9 @@ class _AdminHomeState extends State<AdminHome> {
         backgroundColor: const Color(0xFFF8FAFC),
         body: Row(
           children: [
-            // Sidebar for Desktop
+
             if (MediaQuery.of(context).size.width >= 1000) _buildSidebar(),
 
-            // Main Content Area
             Expanded(
               child: Column(
                 children: [
@@ -88,11 +87,11 @@ class _AdminHomeState extends State<AdminHome> {
   Widget _buildSidebar() {
     return Container(
       width: 280,
-      color: const Color(0xFF0F172A), // More dark
+      color: const Color(0xFF0F172A),
       child: Column(
         children: [
           const SizedBox(height: 48),
-          // Logo & Branding
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
@@ -125,14 +124,13 @@ class _AdminHomeState extends State<AdminHome> {
           ),
           const SizedBox(height: 60),
 
-          // Menu Items
           _buildSidebarItem(0, Icons.people_alt_rounded, 'المستخدمين'),
           _buildSidebarItem(1, Icons.business_rounded, 'المنشآت'),
           _buildSidebarItem(2, Icons.local_shipping_rounded, 'المركبات'),
           _buildSidebarItem(3, Icons.analytics_rounded, 'العمليات'),
 
           const Spacer(),
-          // Profile/Settings or Logout at bottom
+
           _buildSidebarItem(
             99,
             Icons.logout_rounded,

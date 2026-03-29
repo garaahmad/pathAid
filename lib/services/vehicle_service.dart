@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class VehicleService {
-  static const String _baseUrl = 'https://pathaid-backend.onrender.com/api';
+  static const String _baseUrl = 'http://localhost:5000/api/v1';
 
   static Map<String, String> get _headers => {
     'Content-Type': 'application/json',

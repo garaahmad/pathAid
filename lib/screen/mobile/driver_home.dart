@@ -58,22 +58,21 @@ class _DriverHomeState extends State<DriverHome> {
               })
               .toList();
 
-          // Sort prioritization: Active statuses > ACCEPTED > COMPLETED
           _myTasks.sort((a, b) {
             int score(String status) {
               switch (status) {
                 case TransportRequestStatus.ON_THE_WAY:
                 case TransportRequestStatus.ARRIVED_AT_FACILITY:
                 case TransportRequestStatus.TRANSFERRED_TO_DESTINATION:
-                  return 3; // Highest priority (Active)
+                  return 3;
                 case TransportRequestStatus.ACCEPTED:
-                  return 2; // Waiting to start
+                  return 2;
                 case TransportRequestStatus.PENDING:
                   return 1;
                 case TransportRequestStatus.COMPLETED:
                 case TransportRequestStatus.CANCELLED:
                 default:
-                  return 0; // Completed or inactive
+                  return 0;
               }
             }
 
@@ -100,8 +99,7 @@ class _DriverHomeState extends State<DriverHome> {
 
   Map<String, dynamic>? get _currentActiveTask {
     try {
-      // Priority 1: Missions in progress (ON_THE_WAY, ARRIVED, TRANSFERRED)
-      // Priority 2: Accepted missions (waiting to start)
+
       final inProgress = _myTasks.firstWhere(
         (t) =>
             t['status'] == TransportRequestStatus.ON_THE_WAY ||
@@ -400,15 +398,15 @@ class _DriverHomeState extends State<DriverHome> {
   Color _getStatusColor(String status) {
     switch (status) {
       case TransportRequestStatus.ACCEPTED:
-        return const Color(0xFF135bec); // Blue
+        return const Color(0xFF135bec);
       case TransportRequestStatus.ON_THE_WAY:
-        return const Color(0xFFF59E0B); // Orange - Distinct from Blue
+        return const Color(0xFFF59E0B);
       case TransportRequestStatus.ARRIVED_AT_FACILITY:
         return const Color(0xFFD97706);
       case TransportRequestStatus.TRANSFERRED_TO_DESTINATION:
         return const Color(0xFF7C3AED);
       case TransportRequestStatus.COMPLETED:
-        return const Color(0xFF059669); // Green
+        return const Color(0xFF059669);
       default:
         return Colors.grey;
     }
@@ -540,7 +538,7 @@ class _DriverHomeState extends State<DriverHome> {
           0,
           4,
           20,
-        ), // Lift slightly to align with dots
+        ),
         decoration: BoxDecoration(
           color: isActive ? color : Colors.grey[200],
           borderRadius: BorderRadius.circular(1.5),
@@ -553,7 +551,7 @@ class _DriverHomeState extends State<DriverHome> {
     final status = task['status'] ?? 'UNKNOWN';
 
     if (!isProminent) {
-      // Minimal card for 'Other Tasks'
+
       return Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
@@ -592,7 +590,6 @@ class _DriverHomeState extends State<DriverHome> {
       );
     }
 
-    // Full detailed card for 'Current Mission'
     final isCompleted = status == 'COMPLETED';
     final priority = task['priority'] ?? 'MEDIUM';
 
@@ -758,13 +755,13 @@ class _DriverHomeState extends State<DriverHome> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // Dynamic Icon based on next action
+
                       Icon(
                         status ==
                                 TransportRequestStatus
                                     .TRANSFERRED_TO_DESTINATION
                             ? Icons.check_circle
-                            : Icons.arrow_back, // RTL forward
+                            : Icons.arrow_back,
                         color: Colors.white,
                         size: 20,
                       ),

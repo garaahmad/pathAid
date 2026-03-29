@@ -11,7 +11,7 @@ class AdminUsers extends StatefulWidget {
 }
 
 class _AdminUsersState extends State<AdminUsers> {
-  // Form controllers
+
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -28,7 +28,6 @@ class _AdminUsersState extends State<AdminUsers> {
   bool _isSubmitting = false;
   final _searchController = TextEditingController();
 
-  // For editing
   int? _editingUserId;
 
   @override
@@ -109,10 +108,10 @@ class _AdminUsersState extends State<AdminUsers> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left Side: Form
+
           SizedBox(width: 380, child: _buildUserForm()),
           const SizedBox(width: 32),
-          // Right Side: List
+
           Expanded(child: _buildUsersList()),
         ],
       ),
@@ -127,7 +126,7 @@ class _AdminUsersState extends State<AdminUsers> {
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -145,7 +144,7 @@ class _AdminUsersState extends State<AdminUsers> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.blueAccent.withOpacity(0.1),
+                      color: Colors.blueAccent.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -340,7 +339,7 @@ class _AdminUsersState extends State<AdminUsers> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: _selectedRole,
+          initialValue: _selectedRole,
           onChanged: (value) => setState(() => _selectedRole = value!),
           decoration: InputDecoration(
             prefixIcon: const Icon(
@@ -388,7 +387,7 @@ class _AdminUsersState extends State<AdminUsers> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<int>(
-          value: _selectedFacilityId,
+          initialValue: _selectedFacilityId,
           hint: const Text('اختر المنشأة'),
           onChanged: (value) => setState(() => _selectedFacilityId = value),
           decoration: InputDecoration(
@@ -431,7 +430,7 @@ class _AdminUsersState extends State<AdminUsers> {
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -440,7 +439,7 @@ class _AdminUsersState extends State<AdminUsers> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Table Toolbar
+
           Padding(
             padding: const EdgeInsets.all(32.0),
             child: Row(
@@ -460,7 +459,7 @@ class _AdminUsersState extends State<AdminUsers> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.blueAccent.withOpacity(0.1),
+                    color: Colors.blueAccent.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -506,7 +505,7 @@ class _AdminUsersState extends State<AdminUsers> {
             ),
           ),
           const Divider(height: 1),
-          // Table Header
+
           Container(
             color: const Color(0xFFF8FAFC),
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -566,7 +565,7 @@ class _AdminUsersState extends State<AdminUsers> {
             ),
           ),
           const Divider(height: 1),
-          // Table Body
+
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -602,7 +601,7 @@ class _AdminUsersState extends State<AdminUsers> {
                     radius: 20,
                     backgroundColor: _getRoleColor(
                       user['role'],
-                    ).withOpacity(0.1),
+                    ).withValues(alpha: 0.1),
                     child: Text(
                       (user['fName']?[0] ?? '').toUpperCase(),
                       style: TextStyle(
@@ -680,7 +679,7 @@ class _AdminUsersState extends State<AdminUsers> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
@@ -724,7 +723,7 @@ class _AdminUsersState extends State<AdminUsers> {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.05),
+          color: color.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, size: 18, color: color),
@@ -916,23 +915,23 @@ class _AdminUsersState extends State<AdminUsers> {
   void _deleteUser(int userId) async {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('حذف المستخدم'),
         content: const Text(
           'هل أنت متأكد من حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.',
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('إلغاء'),
           ),
           ElevatedButton(
             onPressed: () async {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
               try {
                 await UserService.deleteUser(userId);
                 if (mounted) {
-                  // Update local list immediately for instant UI response
+
                   setState(() {
                     _users.removeWhere((u) => u['id'] == userId);
                     _filterUsers();
@@ -946,7 +945,7 @@ class _AdminUsersState extends State<AdminUsers> {
                     displaySideBar: false,
                   ).show(context);
                 }
-                // Refresh from server silently to sync up
+
                 _loadUsers(silent: true);
               } catch (e) {
                 if (mounted) {
@@ -958,7 +957,7 @@ class _AdminUsersState extends State<AdminUsers> {
                     toastAlignment: Alignment.topCenter,
                     displaySideBar: false,
                   ).show(context);
-                  // Refresh list in case of partial failure
+
                   _loadUsers(silent: true);
                 }
               }

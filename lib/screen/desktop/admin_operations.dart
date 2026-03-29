@@ -113,10 +113,10 @@ class _AdminOperationsState extends State<AdminOperations> {
           Expanded(
             child: Row(
               children: [
-                // Left side: Statistics Chart
+
                 Expanded(flex: 1, child: _buildAchievementChart()),
                 const SizedBox(width: 32),
-                // Right side: Statistics Cards & Details
+
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -611,7 +611,6 @@ class DonutChartPainter extends CustomPainter {
 
     double startAngle = -math.pi / 2;
 
-    // Completed Segment
     paint.color = const Color(0xFF10B981);
     final double completedAngle = (completed / total) * 2 * math.pi;
     if (completedAngle > 0) {
@@ -619,7 +618,6 @@ class DonutChartPainter extends CustomPainter {
       startAngle += completedAngle;
     }
 
-    // Pending Segment
     paint.color = const Color(0xFFFB923C);
     final double pendingAngle = (pending / total) * 2 * math.pi;
     if (pendingAngle > 0) {
@@ -627,7 +625,6 @@ class DonutChartPainter extends CustomPainter {
       startAngle += pendingAngle;
     }
 
-    // Rejected Segment
     paint.color = const Color(0xFFEF4444);
     final double rejectedAngle = (rejected / total) * 2 * math.pi;
     if (rejectedAngle > 0) {

@@ -32,34 +32,30 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
         backgroundColor: const Color(0xFFF3F4F6),
         body: Row(
           children: [
-            // Sidebar
+
             _buildSidebar(),
 
-            // Main Content
             Expanded(
               child: Column(
                 children: [
-                  // Header
+
                   _buildHeader(),
 
-                  // Dashboard Content
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.all(32),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Promo Banner
+
                           _buildPromoBanner(),
 
                           const SizedBox(height: 32),
 
-                          // Stats Row
                           _buildStatsRow(),
 
                           const SizedBox(height: 48),
 
-                          // Recent Requests Table
                           _buildRecentRequestsSection(),
                         ],
                       ),
@@ -81,7 +77,7 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
       child: Column(
         children: [
           const SizedBox(height: 40),
-          // Logo Section
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
@@ -109,7 +105,6 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
           ),
           const SizedBox(height: 60),
 
-          // Navigation Items
           _buildSidebarItem(0, Icons.home, 'Home'),
           _buildSidebarItem(1, Icons.person_outline, 'My Requests'),
           _buildSidebarItem(2, Icons.edit_note, 'Create New Request'),
@@ -117,7 +112,7 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
           _buildSidebarItem(4, Icons.settings_outlined, 'Settings'),
 
           const Spacer(),
-          // Optional footer or profile could go here
+
         ],
       ),
     );
@@ -143,7 +138,7 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
         ),
         child: Row(
           children: [
-            // Indicator
+
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: 6,
@@ -198,7 +193,7 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
             ),
           ),
           const Spacer(),
-          // Profile Info
+
           Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
@@ -275,7 +270,7 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
       ),
       child: Stack(
         children: [
-          // Background pattern/circles for texture
+
           Positioned(
             right: -50,
             top: -50,
@@ -379,7 +374,7 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
         const SizedBox(width: 24),
         Expanded(
           child: _buildStatCard('Completed This Month', '3'),
-        ), // Dummy as per image
+        ),
         const SizedBox(width: 24),
         Expanded(
           child: _buildStatCard('In Progress', inProgressCount.toString()),
@@ -454,7 +449,7 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
           ),
           child: Column(
             children: [
-              // Table Header
+
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: Row(
@@ -498,7 +493,7 @@ class _ClinicDashboardDesktopState extends State<ClinicDashboardDesktop> {
                 ),
               ),
               const Divider(height: 1),
-              // Table Rows
+
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

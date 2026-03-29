@@ -66,10 +66,10 @@ class _AdminVehiclesState extends State<AdminVehicles> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left Side: Form
+
           SizedBox(width: 380, child: _buildVehicleForm()),
           const SizedBox(width: 32),
-          // Right Side: List
+
           Expanded(child: _buildVehiclesList()),
         ],
       ),

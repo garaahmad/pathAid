@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FacilityService {
-  static const String _baseUrl = 'https://pathaid-backend.onrender.com/api';
+  static const String _baseUrl = 'http://localhost:5000/api/v1';
   static const String _cacheKey = 'cached_facilities';
   static Map<String, String> get _headers => {
     'Content-Type': 'application/json',

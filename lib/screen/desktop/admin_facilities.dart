@@ -68,10 +68,10 @@ class _AdminFacilitiesState extends State<AdminFacilities> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left Side: Form
+
           SizedBox(width: 380, child: _buildFacilityForm()),
           const SizedBox(width: 32),
-          // Right Side: List
+
           Expanded(child: _buildFacilitiesList()),
         ],
       ),
@@ -152,7 +152,7 @@ class _AdminFacilitiesState extends State<AdminFacilities> {
               (val) {
                 setState(() {
                   _selectedArea = val!;
-                  // Reset city to first available in area
+
                   _selectedCity = _getAvailableCities(val).first;
                 });
               },
