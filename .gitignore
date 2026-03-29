@@ -53,3 +53,4 @@ backend/.env
 *.zip
 *.pdf
 pathaid-reference/
+backend/
