@@ -6,11 +6,12 @@ import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/data/models/login_request_body.dart';
 import '../../features/auth/data/models/signup_request_body.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../core/networking/api_constants.dart';
 
 class UserService {
   late AuthRepo _authRepo;
 
-  static const String _baseUrl = 'http://localhost:5000/api/v1';
+  static const String _baseUrl = ApiConstants.apiBaseUrl;
 
   static Map<String, String> get _headers => {
         'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ class UserService {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/users'),
+            Uri.parse('${_baseUrl}users'),
             headers: _headers,
           )
           .timeout(const Duration(seconds: 20));
@@ -67,7 +68,7 @@ class UserService {
   static Future<Map<String, dynamic>> createUser(Map<String, dynamic> userData) async {
     try {
       final response = await http.post(
-        Uri.parse('$_baseUrl/users'),
+        Uri.parse('${_baseUrl}users'),
         headers: _headers,
         body: json.encode(userData),
       ).timeout(const Duration(seconds: 20));
@@ -85,7 +86,7 @@ class UserService {
   static Future<Map<String, dynamic>> updateUser(int userId, Map<String, dynamic> userData) async {
     try {
       final response = await http.put(
-        Uri.parse('$_baseUrl/users/$userId'),
+        Uri.parse('${_baseUrl}users/$userId'),
         headers: _headers,
         body: json.encode(userData),
       ).timeout(const Duration(seconds: 20));
@@ -103,7 +104,7 @@ class UserService {
   static Future<void> deleteUser(int userId) async {
     try {
       final response = await http.delete(
-        Uri.parse('$_baseUrl/users/$userId'),
+        Uri.parse('${_baseUrl}users/$userId'),
         headers: _headers,
       ).timeout(const Duration(seconds: 20));
 
@@ -119,7 +120,7 @@ class UserService {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/users/drivers/available-for-request/$requestId'),
+            Uri.parse('${_baseUrl}users/drivers/available-for-request/$requestId'),
             headers: _headers,
           )
           .timeout(const Duration(seconds: 20));

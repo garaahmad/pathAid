@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../core/networking/api_constants.dart';
 
 class FacilityService {
-  static const String _baseUrl = 'http://localhost:5000/api/v1';
+  static const String _baseUrl = ApiConstants.apiBaseUrl;
   static const String _cacheKey = 'cached_facilities';
   static Map<String, String> get _headers => {
     'Content-Type': 'application/json',
@@ -22,7 +23,7 @@ class FacilityService {
     final cachedData = prefs.getString(_cacheKey);
 
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/facilties'));
+      final response = await http.get(Uri.parse('${_baseUrl}facilties'));
 
       if (response.statusCode == 200) {
         await prefs.setString(_cacheKey, response.body);
@@ -51,7 +52,7 @@ class FacilityService {
     required String area,
     required String city,
   }) async {
-    final url = Uri.parse('$_baseUrl/facilties');
+    final url = Uri.parse('${_baseUrl}facilties');
     final body = json.encode({
       'name': name,
       'type': type,
@@ -87,7 +88,7 @@ class FacilityService {
     required String area,
     required String city,
   }) async {
-    final url = Uri.parse('$_baseUrl/facilties/$facilityId');
+    final url = Uri.parse('${_baseUrl}facilties/$facilityId');
     final body = json.encode({
       'name': name,
       'type': type,
@@ -119,7 +120,7 @@ class FacilityService {
   }
 
   static Future<void> deleteFacility(int facilityId) async {
-    final url = Uri.parse('$_baseUrl/facilties/$facilityId');
+    final url = Uri.parse('${_baseUrl}facilties/$facilityId');
     try {
       final response = await http.delete(url, headers: _headers);
       if (response.statusCode == 204 || response.statusCode == 200) {
@@ -144,7 +145,7 @@ class FacilityService {
   }
 
   static Future<List<String>> getAreaCities(String area) async {
-    final url = Uri.parse('$_baseUrl/$area/cities');
+    final url = Uri.parse('$_baseUrl$area/cities');
     try {
       final response = await http.get(url, headers: _headers);
 

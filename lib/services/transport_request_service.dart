@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../core/networking/api_constants.dart';
 
 class TransportRequestService {
-  static const String _baseUrl = 'http://localhost:5000/api/v1';
+  static const String _baseUrl = ApiConstants.apiBaseUrl;
 
   static Map<String, String> get _headers => {
     'Content-Type': 'application/json',
@@ -11,7 +12,7 @@ class TransportRequestService {
   };
 
   static Future<List<Map<String, dynamic>>> getAllTransportRequests() async {
-    final url = Uri.parse('$_baseUrl/transportrequests');
+    final url = Uri.parse('${_baseUrl}transportrequests');
     try {
       final response = await http
           .get(url, headers: _headers)
@@ -39,7 +40,7 @@ class TransportRequestService {
   static Future<Map<String, dynamic>> getTransportRequestById(
     int requestId,
   ) async {
-    final url = Uri.parse('$_baseUrl/transportrequests/$requestId');
+    final url = Uri.parse('${_baseUrl}transportrequests/$requestId');
     try {
       final response = await http.get(url, headers: _headers);
       if (response.statusCode == 200) {
@@ -74,7 +75,7 @@ class TransportRequestService {
       'status': TransportRequestStatus.PENDING,
     });
 
-    final url = Uri.parse('$_baseUrl/transportrequests');
+    final url = Uri.parse('${_baseUrl}transportrequests');
     try {
       final response = await http
           .post(url, headers: _headers, body: body)
@@ -109,7 +110,7 @@ class TransportRequestService {
       'notes': notes,
     });
 
-    final url = Uri.parse('$_baseUrl/transportrequests/$id');
+    final url = Uri.parse('${_baseUrl}transportrequests/$id');
     try {
       final response = await http
           .put(url, headers: _headers, body: body)
@@ -128,7 +129,7 @@ class TransportRequestService {
     required int requestId,
     required String status,
   }) async {
-    final url = Uri.parse('$_baseUrl/transportrequests/$requestId/status');
+    final url = Uri.parse('${_baseUrl}transportrequests/$requestId/status');
 
     final body = json.encode({'status': status});
 
@@ -163,7 +164,7 @@ class TransportRequestService {
     required int driverId,
     required int vehicleId,
   }) async {
-    final url = Uri.parse('$_baseUrl/transportrequests/$requestId/assign');
+    final url = Uri.parse('${_baseUrl}transportrequests/$requestId/assign');
     final body = json.encode({'driverId': driverId, 'vehicleId': vehicleId});
 
     try {
@@ -226,7 +227,7 @@ class TransportRequestService {
     );
   }
   static Future<void> deleteTransportRequest(int requestId) async {
-    final url = Uri.parse('$_baseUrl/transportrequests/$requestId');
+    final url = Uri.parse('${_baseUrl}transportrequests/$requestId');
     try {
       final response = await http.delete(url, headers: _headers);
 

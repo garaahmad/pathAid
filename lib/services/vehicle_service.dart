@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../core/networking/api_constants.dart';
 
 class VehicleService {
-  static const String _baseUrl = 'http://localhost:5000/api/v1';
+  static const String _baseUrl = ApiConstants.apiBaseUrl;
 
   static Map<String, String> get _headers => {
     'Content-Type': 'application/json',
@@ -15,7 +16,7 @@ class VehicleService {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/vehicles'),
+            Uri.parse('${_baseUrl}vehicles'),
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ class VehicleService {
     });
 
     final response = await http.post(
-      Uri.parse('$_baseUrl/vehicles'),
+      Uri.parse('${_baseUrl}vehicles'),
       headers: {'Content-Type': 'application/json'},
       body: body,
     );
@@ -90,7 +91,7 @@ class VehicleService {
     });
 
     final response = await http.put(
-      Uri.parse('$_baseUrl/vehicles/$vehicleId'),
+      Uri.parse('${_baseUrl}vehicles/$vehicleId'),
       headers: {'Content-Type': 'application/json'},
       body: body,
     );
@@ -116,7 +117,7 @@ class VehicleService {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/vehicles/available-for-request/$requestId'),
+            Uri.parse('${_baseUrl}vehicles/available-for-request/$requestId'),
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
@@ -156,7 +157,7 @@ class VehicleService {
 
   static Future<void> deleteVehicle(int vehicleId) async {
     final response = await http.delete(
-      Uri.parse('$_baseUrl/vehicles/$vehicleId'),
+      Uri.parse('${_baseUrl}vehicles/$vehicleId'),
       headers: _headers,
     );
 
