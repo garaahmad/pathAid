@@ -31,10 +31,16 @@ class VehicleService {
           if (decodedData.containsKey('info')) {
             throw Exception('خطأ من السيرفر: ${decodedData['info']}');
           }
-          if (decodedData.containsKey('data') && decodedData['data'] is List) {
-            return (decodedData['data'] as List).cast<Map<String, dynamic>>();
+          if (decodedData.containsKey('data')) {
+            final data = decodedData['data'];
+            if (data is Map && data.containsKey('docs')) {
+              return (data['docs'] as List).cast<Map<String, dynamic>>();
+            }
+            if (data is List) {
+               return data.cast<Map<String, dynamic>>();
+            }
           }
-          throw Exception('تنسيق البيانات غير متوقع: وصل كائن بدلاً من قائمة');
+          throw Exception('تنسيق البيانات غير متوقع');
         } else {
           throw Exception('نوع البيانات غير معروف: ${decodedData.runtimeType}');
         }
@@ -69,7 +75,7 @@ class VehicleService {
       if (response.body.isNotEmpty) {
         try {
           final error = json.decode(response.body);
-          throw Exception(error['info'] ?? 'فشل إنشاء المركبة');
+          throw Exception(error['message'] ?? error['info'] ?? 'فشل إنشاء المركبة');
         } catch (e) {
           throw Exception('فشل إنشاء المركبة: كود ${response.statusCode}');
         }
@@ -102,7 +108,7 @@ class VehicleService {
       if (response.body.isNotEmpty) {
         try {
           final error = json.decode(response.body);
-          throw Exception(error['info'] ?? 'فشل تحديث المركبة');
+          throw Exception(error['message'] ?? error['info'] ?? 'فشل تحديث المركبة');
         } catch (e) {
           throw Exception('فشل تحديث المركبة: كود ${response.statusCode}');
         }
@@ -130,7 +136,13 @@ class VehicleService {
         if (decodedData is List) {
           return decodedData.cast<Map<String, dynamic>>();
         } else if (decodedData is Map && decodedData.containsKey('data')) {
-          return (decodedData['data'] as List).cast<Map<String, dynamic>>();
+          final data = decodedData['data'];
+          if (data is Map && data.containsKey('docs')) {
+            return (data['docs'] as List).cast<Map<String, dynamic>>();
+          }
+          if (data is List) {
+            return data.cast<Map<String, dynamic>>();
+          }
         }
         throw Exception('تنسيق البيانات غير متوقع');
       } else {
@@ -144,7 +156,7 @@ class VehicleService {
               throw Exception('لا يمكن تعيين مركبة لطلب في الماضي');
             }
           }
-          throw Exception(error['info'] ?? 'فشل جلب المركبات المتاحة');
+          throw Exception(error['message'] ?? error['info'] ?? 'فشل جلب المركبات المتاحة');
         } catch (e) {
           if (e.toString().contains('لا يمكن تعيين')) rethrow;
           throw Exception('فشل الخادم: كود ${response.statusCode}');
@@ -165,7 +177,7 @@ class VehicleService {
       if (response.body.isNotEmpty) {
         try {
           final error = json.decode(response.body);
-          throw Exception(error['info'] ?? 'فشل حذف المركبة');
+          throw Exception(error['message'] ?? error['info'] ?? 'فشل حذف المركبة');
         } catch (e) {
           throw Exception('فشل حذف المركبة: كود ${response.statusCode}');
         }

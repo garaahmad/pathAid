@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motion_toast/motion_toast.dart';
+import '../../services/user_service.dart';
 
 class Loginmobile extends StatefulWidget {
   const Loginmobile({super.key});
@@ -12,6 +13,7 @@ class _LoginmobileState extends State<Loginmobile> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +182,7 @@ class _LoginmobileState extends State<Loginmobile> {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: _login,
+                  onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1E60F7),
                     shape: RoundedRectangleBorder(
@@ -189,14 +191,23 @@ class _LoginmobileState extends State<Loginmobile> {
                     elevation: 5,
                     shadowColor: const Color(0x401E60F7),
                   ),
-                  child: const Text(
-                    "تسجيل الدخول",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          "تسجيل الدخول",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
 
@@ -233,22 +244,25 @@ class _LoginmobileState extends State<Loginmobile> {
     );
   }
 
-  void _login() {
-    String username = _usernameController.text;
-    String password = _passwordController.text;
+  Future<void> _login() async {
+    String input = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
 
-    if (username == "Doctor" && password == "Doctor") {
+    if (input == "Doctor" && password == "Doctor") {
       Navigator.pushNamed(context, '/doctor');
-    } else if (username == "Driver" && password == "Driver") {
+      return;
+    } else if (input == "Driver" && password == "Driver") {
       Navigator.pushNamed(context, '/driver');
-    } else if (username == "Dis" && password == "Dis") {
+      return;
+    } else if (input == "Dis" && password == "Dis") {
       Navigator.pushNamed(context, '/dispatcher');
-    } else if (username == "Admin" && password == "Admin") {
-      Navigator.pushNamed(context, '/admin');
-    } else {
+      return;
+    } 
+
+    if (input.isEmpty || password.isEmpty) {
       MotionToast.error(
         description: const Text(
-          'اسم المستخدم أو كلمة المرور غير صحيحة',
+          'يرجى إدخال اسم المستخدم وكلمة المرور',
           style: TextStyle(color: Colors.white),
         ),
         animationType: AnimationType.slideInFromTop,
@@ -256,6 +270,64 @@ class _LoginmobileState extends State<Loginmobile> {
         toastAlignment: Alignment.topCenter,
         displaySideBar: false,
       ).show(context);
+      return;
     }
+
+    // Extraction of username (part before @)
+    String username = input;
+    if (input.contains('@')) {
+      username = input.split('@')[0];
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final userService = UserService();
+      final result = await userService.login(username: username, password: password);
+
+      if (!mounted) return;
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (result['success'] == true) {
+        final userData = result['data'];
+        final String role = userData['role'] ?? '';
+
+        if (role == 'SENDER') {
+          Navigator.pushReplacementNamed(context, '/doctor');
+        } else if (role == 'DRIVER') {
+          Navigator.pushReplacementNamed(context, '/driver');
+        } else if (role == 'COORDINATOR') {
+          Navigator.pushReplacementNamed(context, '/dispatcher');
+        } else {
+          _showError('هذا الحساب لا يمتلك صلاحية الدخول');
+        }
+      } else {
+        _showError(result['message'] ?? 'فشل تسجيل الدخول');
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+      _showError('حدث خطأ في الاتصال بالسيرفر');
+    }
+  }
+
+  void _showError(String message) {
+    MotionToast.error(
+      description: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      animationType: AnimationType.slideInFromTop,
+      toastDuration: const Duration(seconds: 5),
+      toastAlignment: Alignment.topCenter,
+      displaySideBar: false,
+    ).show(context);
   }
 }

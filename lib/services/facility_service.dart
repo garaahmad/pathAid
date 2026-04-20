@@ -5,7 +5,7 @@ import '../core/networking/api_constants.dart';
 
 class FacilityService {
   static const String _baseUrl = ApiConstants.apiBaseUrl;
-  static const String _cacheKey = 'cached_facilities';
+  static const String _cacheKey = 'facilities';
   static Map<String, String> get _headers => {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -23,12 +23,21 @@ class FacilityService {
     final cachedData = prefs.getString(_cacheKey);
 
     try {
-      final response = await http.get(Uri.parse('${_baseUrl}facilties'));
+      final response = await http.get(Uri.parse('${_baseUrl}facilities'));
 
       if (response.statusCode == 200) {
         await prefs.setString(_cacheKey, response.body);
-        List<dynamic> data = json.decode(response.body);
-        return data.cast<Map<String, dynamic>>();
+        final dynamic decodedData = json.decode(response.body);
+        
+        if (decodedData is List) {
+          return decodedData.cast<Map<String, dynamic>>();
+        } else if (decodedData is Map) {
+          final data = decodedData['data'];
+          if (data is Map && data.containsKey('docs')) {
+            return (data['docs'] as List).cast<Map<String, dynamic>>();
+          }
+        }
+        return [];
       } else if (cachedData != null) {
         List<dynamic> data = json.decode(cachedData);
         return data.cast<Map<String, dynamic>>();
@@ -52,7 +61,7 @@ class FacilityService {
     required String area,
     required String city,
   }) async {
-    final url = Uri.parse('${_baseUrl}facilties');
+    final url = Uri.parse('${_baseUrl}facilities');
     final body = json.encode({
       'name': name,
       'type': type,
@@ -69,7 +78,7 @@ class FacilityService {
         if (response.body.isNotEmpty) {
           try {
             final error = json.decode(response.body);
-            throw Exception(error['info'] ?? 'فشل إنشاء المنشأة');
+            throw Exception(error['message'] ?? error['info'] ?? 'فشل إنشاء المنشأة');
           } catch (_) {
             throw Exception('فشل إنشاء المنشأة: كود ${response.statusCode}');
           }
@@ -88,7 +97,7 @@ class FacilityService {
     required String area,
     required String city,
   }) async {
-    final url = Uri.parse('${_baseUrl}facilties/$facilityId');
+    final url = Uri.parse('${_baseUrl}facilities/$facilityId');
     final body = json.encode({
       'name': name,
       'type': type,
@@ -107,7 +116,7 @@ class FacilityService {
         if (response.body.isNotEmpty) {
           try {
             final error = json.decode(response.body);
-            throw Exception(error['info'] ?? 'فشل تحديث المنشأة');
+            throw Exception(error['message'] ?? error['info'] ?? 'فشل تحديث المنشأة');
           } catch (_) {
             throw Exception('فشل تحديث المنشأة: كود ${response.statusCode}');
           }
@@ -120,7 +129,7 @@ class FacilityService {
   }
 
   static Future<void> deleteFacility(int facilityId) async {
-    final url = Uri.parse('${_baseUrl}facilties/$facilityId');
+    final url = Uri.parse('${_baseUrl}facilities/$facilityId');
     try {
       final response = await http.delete(url, headers: _headers);
       if (response.statusCode == 204 || response.statusCode == 200) {
@@ -131,7 +140,7 @@ class FacilityService {
           try {
             final error = json.decode(response.body);
             throw Exception(
-              error['info'] ?? 'فشل حذف المنشأة: ${response.statusCode}',
+              error['message'] ?? error['info'] ?? 'فشل حذف المنشأة: ${response.statusCode}',
             );
           } catch (_) {
             throw Exception('فشل حذف المنشأة: كود ${response.statusCode}');

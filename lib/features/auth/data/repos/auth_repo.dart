@@ -1,4 +1,3 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/networking/api_service.dart';
 import '../models/auth_response.dart';
 import '../models/login_request_body.dart';
@@ -12,13 +11,8 @@ class AuthRepo {
   Future<AuthResponse?> login(LoginRequestBody loginRequestBody) async {
     try {
       final response = await _apiService.login(loginRequestBody);
-
-      if (response.token != null) {
-        await _saveToken(response.token!);
-      }
       return response;
     } catch (error) {
-
       rethrow;
     }
   }
@@ -26,9 +20,6 @@ class AuthRepo {
   Future<AuthResponse?> signup(SignupRequestBody signupRequestBody) async {
     try {
       final response = await _apiService.signup(signupRequestBody);
-      if (response.token != null) {
-        await _saveToken(response.token!);
-      }
       return response;
     } catch (error) {
       rethrow;
@@ -42,10 +33,5 @@ class AuthRepo {
     } catch (error) {
       rethrow;
     }
-  }
-
-  Future<void> _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('auth_token', token);
   }
 }

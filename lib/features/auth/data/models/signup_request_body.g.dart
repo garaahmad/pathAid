@@ -1,6 +1,10 @@
-
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'signup_request_body.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
 SignupRequestBody _$SignupRequestBodyFromJson(Map<String, dynamic> json) =>
     SignupRequestBody(

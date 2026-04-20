@@ -24,9 +24,15 @@ class TransportRequestService {
           return decodedData.cast<Map<String, dynamic>>();
         }
         if (decodedData is Map && decodedData.containsKey('data')) {
-          return (decodedData['data'] as List).cast<Map<String, dynamic>>();
+          final data = decodedData['data'];
+          if (data is Map && data.containsKey('docs')) {
+            return (data['docs'] as List).cast<Map<String, dynamic>>();
+          }
+          if (data is List) {
+            return data.cast<Map<String, dynamic>>();
+          }
         }
-        throw Exception('تنسيق بيانات غير متوقع من الخادم');
+        return [];
       } else {
         throw Exception(
           'فشل تحميل الطلبات: كود ${response.statusCode} - ${response.body}',
@@ -44,7 +50,14 @@ class TransportRequestService {
     try {
       final response = await http.get(url, headers: _headers);
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        final decodedData = json.decode(response.body);
+        if (decodedData is Map && decodedData.containsKey('data')) {
+          final data = decodedData['data'];
+          if (data is Map && data.containsKey('doc')) {
+             return data['doc'] as Map<String, dynamic>;
+          }
+        }
+        return decodedData as Map<String, dynamic>;
       } else {
         throw Exception(
           'فشل جلب الطلب برقم $requestId: كود ${response.statusCode}',
@@ -174,7 +187,14 @@ class TransportRequestService {
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         if (response.body.isNotEmpty) {
-          return json.decode(response.body);
+          final decodedData = json.decode(response.body);
+          if (decodedData is Map && decodedData.containsKey('data')) {
+            final data = decodedData['data'];
+            if (data is Map && data.containsKey('doc')) {
+               return data['doc'] as Map<String, dynamic>;
+            }
+          }
+          return decodedData as Map<String, dynamic>;
         }
         return {'message': 'تم التعيين بنجاح'};
       } else {

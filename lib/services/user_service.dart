@@ -5,7 +5,6 @@ import '../../core/networking/api_service.dart';
 import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/data/models/login_request_body.dart';
 import '../../features/auth/data/models/signup_request_body.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/networking/api_constants.dart';
 
 class UserService {
@@ -40,8 +39,12 @@ class UserService {
             final data = decodedData['data'];
             if (data is List) {
               return data.cast<Map<String, dynamic>>();
-            } else if (data is Map && data.containsKey('users')) {
-              return (data['users'] as List).cast<Map<String, dynamic>>();
+            } else if (data is Map) {
+              if (data.containsKey('docs')) {
+                return (data['docs'] as List).cast<Map<String, dynamic>>();
+              } else if (data.containsKey('users')) {
+                return (data['users'] as List).cast<Map<String, dynamic>>();
+              }
             }
           } else if (decodedData.containsKey('users')) {
             final users = decodedData['users'];
@@ -169,17 +172,17 @@ class UserService {
         return {'success': false, 'message': 'فشل إنشاء الحساب'};
       }
     } catch (e) {
-      return {'success': false, 'message': 'حدث خطأ في الاتصال: \$e'};
+      return {'success': false, 'message': 'حدث خطأ في الاتصال: $e'};
     }
   }
 
   Future<Map<String, dynamic>> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
     try {
       await _initAuthRepo();
-      final body = LoginRequestBody(email: email, password: password);
+      final body = LoginRequestBody(username: username, password: password);
       final response = await _authRepo.login(body);
 
       if (response?.status == "success") {
@@ -188,17 +191,12 @@ class UserService {
         return {'success': false, 'message': 'البريد الإلكتروني أو كلمة المرور غير صحيحة'};
       }
     } catch (e) {
-      return {'success': false, 'message': 'حدث خطأ في الاتصال: \$e'};
+      return {'success': false, 'message': 'حدث خطأ في الاتصال: $e'};
     }
   }
 
   Future<Map<String, dynamic>> getUserProfile() async {
     try {
-      final token = await _getToken();
-      if (token == null) {
-        return {'success': false, 'message': 'أنت غير مسجل الدخول'};
-      }
-
       await _initAuthRepo();
       final response = await _authRepo.getUserProfile();
 
@@ -208,17 +206,11 @@ class UserService {
         return {'success': false, 'message': 'فشل في جلب البيانات'};
       }
     } catch (e) {
-      return {'success': false, 'message': 'حدث خطأ في الاتصال: \$e'};
+      return {'success': false, 'message': 'حدث خطأ في الاتصال: $e'};
     }
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
-  }
-
-  Future<String?> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token');
+    // Token removal was removed as requested
   }
 }
